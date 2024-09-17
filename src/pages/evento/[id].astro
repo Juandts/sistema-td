@@ -1,0 +1,85 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { fetchEventoById } from "../../lib/api";
+const { id } = Astro.params;  // Obtener el ID desde la URL dinámica
+const evento = await fetchEventoById(id);  // Obtener los datos del evento
+---
+
+<Layout title={`Detalles del evento ${evento.nombre}`}>
+  <main>
+    <section id="detalle-evento" class="form-section">
+      <h1>Detalles del Evento</h1>
+      
+      <div class="evento-container">
+        <div class="detalle-container">
+          <p><strong>Nombre del evento:</strong> {evento.nombre_evento}</p>
+          <p><strong>Fecha de inicio:</strong> {evento.fecha_inicio}</p>
+          <p><strong>Fecha de término:</strong> {evento.fecha_termino}</p>
+          <p><strong>Categoría:</strong> {evento.clasificacion}</p>
+          <p><strong>Promotor:</strong> {evento.promotor}</p>
+          <p><strong>Renta:</strong> ${evento.renta}</p>
+          <p><strong>Gastos operativos:</strong> ${evento.gastos_operativos}</p>
+          <p><strong>Gastos de equipo:</strong> ${evento.gastos_equipo}</p>
+          <p><strong>Proveedor:</strong> {evento.proveedor}</p>
+          <p><strong>Total de gastos:</strong> ${(evento.gastos_operativos + evento.gastos_equipo + evento.renta)}</p>
+          <p><strong>Liquidado:</strong> {evento.liquidado ? 'Sí' : 'No'}</p>
+        </div>
+      </div>
+
+      <div class="button-group">
+        <a href="/reportes" class="menu-link">Regresar</a>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .form-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2rem;
+    padding: 1rem;
+    background-color: #f4f4f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .evento-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .detalle-container {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .detalle-container p {
+    margin: 0;
+    font-size: 1rem;
+    color: #333;
+  }
+
+  .detalle-container strong {
+    color: #555;
+  }
+
+  .button-group {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
+  }
+</style>

@@ -1,0 +1,181 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { supabase } from "../lib/supabaseClient.js";
+
+let userx = null;
+
+async function getUserId() {
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+    if (user) {
+        userx = user;
+    }
+    return user;
+}
+
+await getUserId();
+
+// Manejar el envío del formulario
+if (Astro.request.method === "POST") {
+    const formData = await Astro.request.formData();
+    const nombreEvento = formData.get("nombre_evento") as string;
+    const fechaInicio = formData.get("fecha_inicio") as string;
+    const fechaTermino = formData.get("fecha_termino") as string;
+    const clasificacion = formData.get("clasificacion") as string;
+    const inmueble = formData.get("inmueble") as string;
+    const promotor = formData.get("promotor") as string;
+    const renta = formData.get("renta") as string;
+    const gastosOperativos = formData.get("gastos_operativos") as string;
+    const gastosEquipo = formData.get("gastos_equipo") as string;
+    const proveedor = formData.get("proveedor") as string;
+
+    const { error } = await supabase.from("eventos").insert({
+        nombre_evento: nombreEvento,
+        fecha_inicio: fechaInicio,
+        fecha_termino: fechaTermino,
+        clasificacion: clasificacion,
+        inmueble: inmueble,
+        promotor: promotor,
+        renta: renta,
+        gastos_operativos: gastosOperativos,
+        gastos_equipo: gastosEquipo,
+        proveedor: proveedor,
+        liquidado: false,
+        user_id: userx.id,
+    });
+
+    if (error) {
+        console.error("Error al crear el evento:", error.message);
+    } else {
+        return Astro.redirect("/eventos");
+    }
+}
+---
+
+<Layout title="Registro de Evento - Sistema de Liquidaciones">
+    <!-- Sección de formulario para el registro de eventos -->
+    <section id="eventos" class="form-section">
+        <h1>Registro de Eventos y Captura de Datos</h1>
+        <div class="event-container">
+            <!-- Imagen a la izquierda -->
+            <div class="image-container">
+                <img
+                    src="images/eventos.png"
+                    alt="Imagen del Evento"
+                    class="evento-imagen"
+                />
+            </div>
+
+            <!-- Formulario a la derecha -->
+            <div class="form-container">
+                <form id="event-form" method="post">
+                    <!-- Información del Evento -->
+                    <label for="nombre_evento">Nombre del evento:</label>
+                    <input
+                        type="text"
+                        id="nombre_evento"
+                        name="nombre_evento"
+                        placeholder="Nombre del evento"
+                        required
+                    />
+
+                    <label for="fecha_inicio">Fecha de inicio:</label>
+                    <input
+                        type="date"
+                        id="fecha_inicio"
+                        name="fecha_inicio"
+                        required
+                    />
+
+                    <label for="fecha_termino">Fecha de término:</label>
+                    <input
+                        type="date"
+                        id="fecha_termino"
+                        name="fecha_termino"
+                        required
+                    />
+
+                    <label for="clasificacion">Clasificación:</label>
+                    <select id="clasificacion" name="clasificacion" required>
+                        <option value="" disabled selected
+                            >Seleccione una opción</option
+                        >
+                        <option value="concierto">Concierto</option>
+                        <option value="musica">Teatro</option>
+                        <option value="danza">Danza</option>
+                        <option value="ballet">Ballet</option>
+                        <option value="opera">Opera</option>
+                        <option value="cine">Cine</option>
+                    </select>
+
+                    <label for="inmueble">Inmueble:</label>
+                    <select id="inmueble" name="inmueble" required>
+                        <option value="" disabled selected
+                            >Seleccione una opción</option
+                        >
+                        <option value="principal">Foro Principal</option>
+                        <option value="estudio">Estudio</option>
+                    </select>
+
+                    <label for="promotor">Promotor:</label>
+                    <input
+                        type="text"
+                        id="promotor"
+                        name="promotor"
+                        placeholder="Ingrese el nombre del promotor"
+                        required
+                    />
+
+                    <label for="renta">Renta del Inmueble:</label>
+                    <input
+                        type="text"
+                        id="renta"
+                        name="renta"
+                        placeholder="Ingrese la renta del inmueble"
+                        required
+                    />
+
+                    <label for="gastos_operativos">Gastos operativos:</label>
+                    <input
+                        type="text"
+                        id="gastos_operativos"
+                        name="gastos_operativos"
+                        placeholder="Ingrese el monto del gasto operativo"
+                        required
+                    />
+
+                    <label for="gastos_equipo">Gastos de Equipos:</label>
+                    <input
+                        type="text"
+                        id="gastos_equipo"
+                        name="gastos_equipo"
+                        placeholder="Ingrese el monto del gasto de equipo"
+                        required
+                    />
+
+                    <label for="proveedor">Proveedor de Equipo:</label>
+                    <input
+                        type="text"
+                        id="proveedor"
+                        name="proveedor"
+                        placeholder="Ingrese el nombre del proveedor"
+                        required
+                    />
+
+                    <!-- Botones de acción -->
+                    <div class="button-group">
+                        <button type="submit" class="btn-crear"
+                            >Crear evento</button
+                        >
+                    </div>
+
+                    <!-- Enlaces de navegación -->
+                    <div class="navigation-links">
+                        <a href="/menu" class="menu-link">Regresar al menú</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</Layout>

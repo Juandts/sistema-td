@@ -1,0 +1,94 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { fetchEventosNoLiquidadosByUser } from "../lib/api";
+import { supabase } from "../lib/supabaseClient.js";
+
+let userx = null;
+
+async function getUserId() {
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+    if (user) {
+        userx = user;
+    }
+    return user;
+}
+
+await getUserId();
+
+// Obtener eventos no liquidados del usuario autenticado
+let eventos = [];
+if (userx) {
+    try {
+        eventos = await fetchEventosNoLiquidadosByUser(userx.id);
+    } catch (error) {
+        console.error("Error al obtener eventos:", error.message);
+    }
+}
+
+if (Astro.request.method === "POST") {
+    const formData = await Astro.request.formData();
+    const eventoId = formData.get("evento") as string;
+    //const fechaFinalizacion = formData.get("fecha_finalizacion") as string;
+
+    // Actualizar el evento en la base de datos
+    const { error } = await supabase.from("eventos").update({
+        liquidado: true,
+        //fecha_finalizacion: fechaFinalizacion,
+    }).eq("id", eventoId);
+
+    if (error) {
+        console.error("Error al actualizar el evento:", error.message);
+    } else {
+        return Astro.redirect("/menu");
+    }
+}
+---
+
+<Layout title="Liquidación de Evento - Sistema de Liquidaciones">
+    <section id="liquidacion" class="form-section">
+        <h1>Actualizar estado del evento</h1>
+        <div class="event-container">
+            <!-- Imagen a la izquierda -->
+            <div class="image-container">
+                <img
+                    src="images/liquidaciones.png"
+                    alt="Imagen de Liquidaciones"
+                    class="liquidacion-imagen"
+                />
+            </div>
+
+            <!-- Formulario a la derecha -->
+            <div class="form-container">
+                <form id="liquidacion-form" method="post">
+                    <label for="evento">Seleccione el evento:</label>
+                    <select id="evento" name="evento" required>
+                        <option value="" disabled selected>Seleccione el evento</option>
+                        {eventos.map(evento => (
+                            <option value={evento.id}>{evento.nombre_evento}</option>
+                        ))}
+                    </select>
+
+                    <label for="fecha_finalizacion">Fecha de finalización:</label>
+                    <input
+                        type="date"
+                        id="fecha_finalizacion"
+                        name="fecha_finalizacion"
+                        required
+                    />
+
+                    <!-- Botones de acción -->
+                    <div class="button-group">
+                        <button type="submit" class="btn-generar">Liquidar Evento</button>
+                    </div>
+
+                    <!-- Enlaces de navegación -->
+                    <div class="navigation-links">
+                        <a href="/menu" class="menu-link">Regresar al menú</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</Layout>

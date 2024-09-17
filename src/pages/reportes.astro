@@ -1,0 +1,83 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { fetchEventosByUser } from "../lib/api";
+import { supabase } from "../lib/supabaseClient.js";
+
+let userx = null;
+
+async function getUserId() {
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
+    if (user) {
+        userx = user;
+    }
+    return user;
+}
+
+await getUserId();
+
+// Obtener eventos del usuario
+let eventos = [];
+if (userx) {
+    try {
+        eventos = await fetchEventosByUser(userx.id);
+    } catch (error) {
+        console.error("Error al obtener eventos:", error.message);
+    }
+}
+---
+
+<Layout title="Reportes - Sistema de Liquidaciones">
+    <main>
+        <section id="reportes" class="form-section">
+            <h1>Generar Reportes</h1>
+
+            <div class="event-container">
+                <div class="image-container">
+                    <img
+                        src="images/reportes.png"
+                        alt="Imagen de Reportes"
+                        class="reporte-imagen"
+                    />
+                </div>
+
+                <div class="form-container">
+                    <label for="evento">Seleccione el evento:</label>
+                    <select id="evento" name="evento" required>
+                        <option value="" disabled selected
+                            >Seleccione el evento</option
+                        >
+                        {
+                            eventos.map((evento) => (
+                                <option value={evento.id}>
+                                    {evento.nombre_evento}
+                                </option>
+                            ))
+                        }
+                    </select>
+                    <div class="navigation-links">
+                        <a href="/menu" class="menu-link">Regresar al menú</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document
+            .getElementById("evento")
+            .addEventListener("change", function () {
+                const eventoId = (this as HTMLSelectElement).value;
+                if (eventoId) {
+                    window.location.href = `/evento/${eventoId}`;
+                }
+            });
+    </script>
+</Layout>
+
+<style>
+    select {
+        margin-bottom: 2rem;
+    }
+</style>

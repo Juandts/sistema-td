@@ -1,0 +1,103 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { supabase } from "../lib/supabaseClient.js";
+
+let errorMessage = "";
+
+// Manejar el inicio de sesión proveniente del formulario
+if (Astro.request.method === "POST") {
+    try {
+        const formData = await Astro.request.formData();
+        const email = formData.get("email") as string;
+        const password = formData.get("password") as string;
+
+        const { data: user, error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
+
+        if (error) {
+            errorMessage = `Error: ${error.message}`;
+        } else {
+            return Astro.redirect("/menu");
+        }
+    } catch (error) {
+        if (error instanceof Error) {
+            errorMessage = `Error: ${error.message}`;
+        }
+    }
+}
+---
+
+<Layout title="Inicio de Sesión - Sistema de Liquidaciones">
+    <main>
+        <div class="login-container">
+            <h2>Iniciar Sesión</h2>
+            <form method="POST">
+                <input type="email" name="email" placeholder="Email" required />
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Contraseña"
+                    required
+                />
+                <button type="submit">Ingresar</button>
+            </form>
+            {errorMessage && <p class="error-message">{errorMessage}</p>}
+        </div>
+    </main>
+</Layout>
+
+<style>
+    .login-container {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
+        margin: 100px auto;
+    }
+
+    .login-container h2 {
+        margin-bottom: 20px;
+        color: #800000;
+    }
+
+    .login-container form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .login-container input[type="email"],
+    .login-container input[type="password"] {
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+    }
+
+    .login-container button[type="submit"] {
+        padding: 10px;
+        background-color: #4c2a1f;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .login-container button[type="submit"]:hover {
+        background-color: #800000;
+    }
+    .error-message {
+        color: red;
+        background-color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        margin-top: 10px;
+        border: 1px solid red;
+    }
+</style>

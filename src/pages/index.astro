@@ -1,0 +1,131 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { supabase } from "../lib/supabaseClient.js";
+
+let session = null;
+
+async function checkSession() {
+    const {
+        data: { session: userSession },
+    } = await supabase.auth.getSession();
+    session = userSession;
+}
+
+await checkSession();
+---
+
+<Layout title="Sistema de Liquidaciones - Bienvenida">
+	<main>
+		<!-- Sección de bienvenida -->
+		<section class="welcome-section">
+			<h1>Liquidaciones TD</h1>
+		</section>
+
+		<div class="container">
+			<!-- Galería de imágenes -->
+			{session ? (<a href="/menu">Menú</a>):(<></>)}
+			<section class="image-gallery">
+				<ul>
+					<li><img src="images/img1.jpeg" alt="Concierto 1" /></li>
+					<li><img src="images/img2.jpeg" alt="Concierto 2" /></li>
+					<li><img src="images/img3.jpeg" alt="Concierto 3" /></li>
+					<li><img src="images/img4.jpeg" alt="Concierto 4" /></li>
+				</ul>
+			</section>
+
+			<!-- Sección de recursos: tutorial y guía de usuario divididos en cuadros -->
+			<section class="resources-section">
+				<div class="resource-box">
+					<h2>Video tutorial</h2>
+					<video controls>
+						<source src="videos/tutorial.mp4" type="video/mp4" />
+					</video>
+				</div>
+				<h2>Guía de usuario</h2>
+				<a href="documents/guia-usuario.pdf" download
+					>Descargar Guía de Usuario (PDF)</a
+				>
+			</section>
+		</div>
+	</main>
+</Layout>
+
+<style>
+
+	.container {
+		padding: 1rem;
+	}
+
+	.image-gallery {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: fit-content;
+		overflow-x: scroll;
+		width: 100%;
+	}
+
+	ul {
+		display: flex;
+		justify-content: center;
+		gap: 10px;
+		margin-top: 20px;
+	}
+
+	img {
+		max-width: 200px;
+		height: auto;
+		border-radius: 5px;
+		border: 1px solid #ccc;
+	}
+
+	.resources-section {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+		margin-top: 20px;
+		padding: 0 10%;
+	}
+
+	.resource-box {
+		flex: 1;
+		background-color: #fff;
+		border: 1px solid #ccc;
+		border-radius: 10px;
+		padding: 20px;
+		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+		text-align: center;
+	}
+
+	.resource-box h2 {
+		margin-bottom: 15px;
+		color: #800000;
+	}
+
+	.resource-box video {
+		width: 100%;
+		height: 200px;
+		border-radius: 10px;
+	}
+
+	h2 {
+		align-self: center;
+	}
+
+	a {
+		display: inline-block;
+		padding: 10px 15px;
+		background-color: #003366;
+		color: white;
+		border-radius: 5px;
+		text-decoration: none;
+		font-size: 16px;
+		width: fit-content;
+		align-self: center;
+		cursor: pointer;
+	}
+
+	.resource-box a:hover {
+		background-color: #0055aa;
+	}
+</style>
