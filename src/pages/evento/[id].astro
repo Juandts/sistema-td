@@ -3,6 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import { fetchEventoById } from "../../lib/api";
 const { id } = Astro.params;  // Obtener el ID desde la URL dinámica
 const evento = await fetchEventoById(id);  // Obtener los datos del evento
+console.log(evento.liquidado)
 ---
 
 <Layout title={`Detalles del evento ${evento.nombre}`}>
@@ -23,6 +24,7 @@ const evento = await fetchEventoById(id);  // Obtener los datos del evento
           <p><strong>Proveedor:</strong> {evento.proveedor}</p>
           <p><strong>Total de gastos:</strong> ${(evento.gastos_operativos + evento.gastos_equipo + evento.renta)}</p>
           <p><strong>Liquidado:</strong> {evento.liquidado ? 'Sí' : 'No'}</p>
+          <p><strong>Fecha de liquidación:</strong> {evento.liquidado ? evento.fecha_liquidado : 'No liquidado'}</p>
         </div>
       </div>
 

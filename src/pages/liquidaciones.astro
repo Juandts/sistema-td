@@ -30,12 +30,13 @@ if (userx) {
 if (Astro.request.method === "POST") {
     const formData = await Astro.request.formData();
     const eventoId = formData.get("evento") as string;
-    //const fechaFinalizacion = formData.get("fecha_finalizacion") as string;
+    const fechaliquidado = formData.get("fecha_liquidado") as string;
+    console.log(fechaliquidado);
 
     // Actualizar el evento en la base de datos
     const { error } = await supabase.from("eventos").update({
         liquidado: true,
-        //fecha_finalizacion: fechaFinalizacion,
+        fecha_liquidado: fechaliquidado,
     }).eq("id", eventoId);
 
     if (error) {
@@ -46,22 +47,22 @@ if (Astro.request.method === "POST") {
 }
 ---
 
-<Layout title="Liquidación de Evento - Sistema de Liquidaciones">
-    <section id="liquidacion" class="form-section">
+<Layout title="Liquidación de Evento - Sistema de liquidadoes">
+    <section id="liquidado" class="form-section">
         <h1>Actualizar estado del evento</h1>
         <div class="event-container">
             <!-- Imagen a la izquierda -->
             <div class="image-container">
                 <img
                     src="images/liquidaciones.png"
-                    alt="Imagen de Liquidaciones"
-                    class="liquidacion-imagen"
+                    alt="Imagen de liquidaciones"
+                    class="liquidado-imagen"
                 />
             </div>
 
             <!-- Formulario a la derecha -->
             <div class="form-container">
-                <form id="liquidacion-form" method="post">
+                <form id="liquidado-form" method="post">
                     <label for="evento">Seleccione el evento:</label>
                     <select id="evento" name="evento" required>
                         <option value="" disabled selected>Seleccione el evento</option>
@@ -70,11 +71,11 @@ if (Astro.request.method === "POST") {
                         ))}
                     </select>
 
-                    <label for="fecha_finalizacion">Fecha de finalización:</label>
+                    <label for="fecha_liquidado">Fecha de finalización:</label>
                     <input
                         type="date"
-                        id="fecha_finalizacion"
-                        name="fecha_finalizacion"
+                        id="fecha_liquidado"
+                        name="fecha_liquidado"
                         required
                     />
 
