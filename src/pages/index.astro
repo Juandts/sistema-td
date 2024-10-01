@@ -75,12 +75,21 @@ await checkSession();
 		margin-top: 20px;
 	}
 
-	img {
-		max-width: 200px;
-		height: auto;
-		border-radius: 5px;
-		border: 1px solid #ccc;
-	}
+	/* Estilo para la galería de imágenes */
+img {
+    max-width: 200px;
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto hover para las imágenes */
+img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
 
 	.resources-section {
 		display: flex;
@@ -109,11 +118,14 @@ await checkSession();
 		color: #800000;
 	}
 
-	.resource-box video {
-		width: 100%;
-		height: 200px;
-		border-radius: 10px;
-	}
+	/* Ajuste del ancho del video */
+.resource-box video {
+    width: 100%;
+    max-width: 800px; /* Esto limitará el ancho máximo del video */
+    height: auto;
+    border-radius: 10px;
+}
+
 
 	h2 {
 		align-self: center;
