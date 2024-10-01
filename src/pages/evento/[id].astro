@@ -3,7 +3,6 @@ import Layout from "../../layouts/Layout.astro";
 import { fetchEventoById } from "../../lib/api";
 const { id } = Astro.params;  // Obtener el ID desde la URL dinámica
 const evento = await fetchEventoById(id);  // Obtener los datos del evento
-console.log(evento.liquidado)
 ---
 
 <Layout title={`Detalles del evento ${evento.nombre}`}>

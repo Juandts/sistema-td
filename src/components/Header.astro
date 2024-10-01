@@ -13,24 +13,60 @@ await checkSession();
 ---
 
 <header>
-    <img src="/images/logo.png" alt="Logo Centro Cultural Teatro Diana" />
-    <div>
-        <p>"Un espacio aparte"</p>
-        {session ? (
-            <div class="user-menu">
-                <span class="user-name">{session.user.email.split('@')[0]}</span>
-                <div class="dropdown-menu">
-                    <a href="/api/logout" id="logout-button">Cerrar sesión</a>
-                </div>
-            </div>
-        ) : (
-            <a href="/login">Iniciar sesión</a>
-        )}
+    <div class="about-section">
+        <a class="d_a" href="/">
+            <img src="/images/logo.png" alt="Logo Centro Cultural Teatro Diana" />
+        </a>
+        <a class="d_a" href="about">
+            <img src="/icons/info.svg" alt="Información" title="Más información" />
+        </a>
+    </div>
+    <div class="header-menu">
+        <div class="login-menu">
+            <p>"Un espacio aparte"</p>
+            {
+                session ? (
+                    <div class="user-menu">
+                        <span class="user-name">
+                            {session.user.email.split("@")[0]}
+                        </span>
+                        <div class="dropdown-menu">
+                            <a href="/api/logout" id="logout-button">
+                                Cerrar sesión
+                            </a>
+                        </div>
+                    </div>
+                ) : (
+                    <a class="" href="/login">
+                        Ingresar
+                    </a>
+                )
+            }
+        </div>
     </div>
 </header>
 
 <style>
-    /* Estilos del encabezado */
+    .d_a {
+        background: transparent;
+        cursor: pointer;
+    }
+
+    .d_a:hover {
+        background: transparent;
+    }
+
+    .about-section {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+    }
+    
+    nav {
+        display: flex;
+        gap: 10px;
+    }
+
     header {
         display: flex;
         flex-direction: row;
@@ -110,7 +146,9 @@ await checkSession();
         border-radius: 5px;
         text-align: center;
         text-decoration: none;
-        transition: background-color 0.2s ease, box-shadow 0.2s ease;
+        transition:
+            background-color 0.2s ease,
+            box-shadow 0.2s ease;
     }
 
     .dropdown-menu a:hover {

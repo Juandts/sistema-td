@@ -4,7 +4,6 @@ export async function fetchEventosByUser(user_id) {
   const { data, error } = await supabase
     .from('eventos')
     .select('*')
-    .eq('user_id', user_id);
 
   if (error) throw error;
   return data;
@@ -14,7 +13,6 @@ export async function fetchEventosNoLiquidadosByUser(userId) {
   const { data, error } = await supabase
     .from('eventos')
     .select('*')
-    .eq('user_id', userId)
     .eq('liquidado', false);
 
   if (error) {
@@ -44,13 +42,13 @@ export async function fetchEventoById(eventoId) {
 }
 
 
-export async function updateEventoLiquidado(eventoId, /*fechaFinalizacion*/) {
+export async function updateEventoLiquidado(eventoId, fechaFinalizacion) {
   try {
     const { data, error } = await supabase
       .from('eventos')
       .update({
         liquidado: true,
-        //fecha_finalizacion: fechaFinalizacion,
+        fecha_finalizacion: fechaFinalizacion,
       })
       .eq('id', eventoId);
 

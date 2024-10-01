@@ -31,7 +31,6 @@ if (Astro.request.method === "POST") {
     const formData = await Astro.request.formData();
     const eventoId = formData.get("evento") as string;
     const fechaliquidado = formData.get("fecha_liquidado") as string;
-    console.log(fechaliquidado);
 
     // Actualizar el evento en la base de datos
     const { error } = await supabase.from("eventos").update({
