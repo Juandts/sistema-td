@@ -5,7 +5,7 @@ const { id } = Astro.params;  // Obtener el ID desde la URL dinámica
 const evento = await fetchEventoById(id);  // Obtener los datos del evento
 ---
 
-<Layout title={`Detalles del evento ${evento.nombre}`}>
+<Layout title={`Detalles del evento ${evento.nombre_evento}`}>
   <main>
     <section id="detalle-evento" class="form-section">
       <h1>Detalles del Evento</h1>
